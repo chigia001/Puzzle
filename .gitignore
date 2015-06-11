@@ -2,3 +2,4 @@
 /*/bin
 *.exe
 *.dll
+/*/obj
