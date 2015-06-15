@@ -9,7 +9,7 @@ namespace Pic_a_Pix.Model
     public class PuzzleHint
     {
 
-        public PuzzleHint(string hint, IList<PuzzleHint> Hints, IList<Color> PossibleColors)
+        public PuzzleHint(string hint, IList<PuzzleHint> Hints, IList<Color> PossibleColors, int endIndex)
         {
             // TODO: Complete member initialization
             var pattern = @"^(\d+)(\w)?$";
@@ -30,11 +30,17 @@ namespace Pic_a_Pix.Model
                 HintOrdinal = Hints.Count();
                 CellBelongToHint = new List<PuzzleCell>();
             }
+            this.StartIndex = 0;
+            this.EndIndex = endIndex-1;
         }
         public int HintLength { private set; get; }
         public int HintOrdinal { private set; get; }
         public Color HintColor { private set; get; }
         public IList<PuzzleCell> CellBelongToHint { get; set; }
+        public  bool IsCompleted { get; set; }
+
+        public int StartIndex { get; set; }
+        public int EndIndex { get; set; }
        
     }
 }
