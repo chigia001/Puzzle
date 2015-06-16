@@ -1,11 +1,8 @@
-﻿using CommandLine;
+﻿using System.Text;
+using CommandLine;
 using Pic_a_Pix.Bussiness;
 using Pic_a_Pix.Excel;
 using Pic_a_Pix.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Pic_a_Pix
 {
@@ -19,8 +16,12 @@ namespace Pic_a_Pix
             {
                 var puzzle = new Puzzle(commandLineInput.HintFile);
                 var solver = new PicAPixSolver();
-                solver.Solve(puzzle);
                 var excelObject = new ExcelObject(puzzle);
+                for (int i = 0; i < 10; i++)
+                {
+                    solver.Solve(puzzle);
+                    excelObject.AddSheet(i);
+                }
                 excelObject.WriteToExcelFile(commandLineInput.OutputFile);
 
             }

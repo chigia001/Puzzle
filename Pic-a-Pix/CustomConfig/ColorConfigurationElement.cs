@@ -1,15 +1,9 @@
-﻿using System;
-using System.Configuration;
-using System.Collections;
+﻿using System.Configuration;
 
 namespace Pic_a_Pix.CustomConfig
 {
     public class ColorConfigurationElement : ConfigurationElement
     {
-        public ColorConfigurationElement()
-        {
-        }
-
         [ConfigurationProperty("color", IsRequired = true)]
         public string Color
         {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Pic_a_Pix.Model
@@ -17,7 +16,7 @@ namespace Pic_a_Pix.Model
             if (match.Success)
             {
                 HintLength = Convert.ToInt32(match.Groups[1].Value);
-                if (match.Groups.Count == 2)
+                if (match.Groups[2].Index >0)
                 {
                     HintColor = ColorDictionary.current.Colors[match.Groups[2].Value];
                 }
@@ -30,8 +29,8 @@ namespace Pic_a_Pix.Model
                 HintOrdinal = Hints.Count();
                 CellBelongToHint = new List<PuzzleCell>();
             }
-            this.StartIndex = 0;
-            this.EndIndex = endIndex-1;
+            StartIndex = 0;
+            EndIndex = endIndex-1;
         }
         public int HintLength { private set; get; }
         public int HintOrdinal { private set; get; }

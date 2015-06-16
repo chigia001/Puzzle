@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Pic_a_Pix.Model
 {
@@ -10,15 +7,15 @@ namespace Pic_a_Pix.Model
 
         public PuzzleCell(int rowIndex, int columnIndex, IList<Color> possibleColor,Line row,Line column)
         {
-            this.RowIndex = rowIndex;
-            this.ColumnIndex = columnIndex;
-            this.PossibleColor = new List<Color>();
+            RowIndex = rowIndex;
+            ColumnIndex = columnIndex;
+            PossibleColor = new List<Color>();
             foreach(var color in possibleColor)
             {
-                this.PossibleColor.Add(color);
+                PossibleColor.Add(color);
             }
-            this.Row = row;
-            this.Column = column;
+            Row = row;
+            Column = column;
         }
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }

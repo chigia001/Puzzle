@@ -1,9 +1,6 @@
-﻿using Pic_a_Pix.CustomConfig;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
+using Pic_a_Pix.CustomConfig;
 
 namespace Pic_a_Pix.Model
 {
@@ -14,9 +11,9 @@ namespace Pic_a_Pix.Model
         public string ColorCode { get; set; }
         public Color(ColorConfigurationElement element)
         {
-            this.ColorName = element.Color;
-            this.ColorCode = element.ColorCode;
-            this.HintCharacter = element.HintCharacter;
+            ColorName = element.Color;
+            ColorCode = element.ColorCode;
+            HintCharacter = element.HintCharacter;
         }
     }
 

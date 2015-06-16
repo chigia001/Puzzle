@@ -1,13 +1,9 @@
-﻿using NPOI.HSSF.UserModel;
-using NPOI.HSSF.Util;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Pic_a_Pix.Model;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 
 namespace Pic_a_Pix.Excel
 {
@@ -15,12 +11,20 @@ namespace Pic_a_Pix.Excel
     {
         public IWorkbook workbook;
         public ISheet sheet;
+        public Puzzle puzzle;
+
         public Dictionary<Color, ICellStyle> StyleDictionary { get; set; }
         public ExcelObject(Puzzle puzzle)
         {
             workbook = new XSSFWorkbook();
-            workbook.CreateSheet("Result");
-            sheet = workbook.GetSheet("Result");
+            this.puzzle = puzzle;
+        }
+
+        public void AddSheet(int step)
+        {
+            var sheetName = string.Format("step-{0}", step);
+            workbook.CreateSheet(sheetName);
+            sheet = workbook.GetSheet(sheetName);
 
             workbook.SetPrintArea(0, 0, puzzle.ColumnSize - 1, 0, puzzle.RowSize - 1);
             CreateStyle(puzzle);
@@ -36,7 +40,7 @@ namespace Pic_a_Pix.Excel
                 {
                     var cell = row.CreateCell(columnIndex);
 
-                    if (puzzleRow.Cells[columnIndex].PossibleColor.Count ==1)
+                    if (puzzleRow.Cells[columnIndex].PossibleColor.Count == 1)
                     {
                         var color = puzzleRow.Cells[columnIndex].PossibleColor[0];
                         cell.CellStyle = StyleDictionary[color];
@@ -44,6 +48,7 @@ namespace Pic_a_Pix.Excel
                 }
             }
         }
+
         public void WriteToExcelFile(string outputPath)
         {
             FileStream wFile = new FileStream(outputPath, FileMode.Create);

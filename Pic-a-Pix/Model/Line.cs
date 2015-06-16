@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NPOI.SS.Formula.Functions;
+﻿using System.Collections.Generic;
 
 namespace Pic_a_Pix.Model
 {
@@ -13,16 +9,16 @@ namespace Pic_a_Pix.Model
         {
             var hints = inputLine.Split(' ');
 
-            this.Cells = new List<PuzzleCell>();
-            this.Hints = new List<PuzzleHint>();
+            Cells = new List<PuzzleCell>();
+            Hints = new List<PuzzleHint>();
 
             foreach(var hint in hints)
             {
-                this.Hints.Add(new PuzzleHint(hint, this.Hints, PossibleColors, length));
+                Hints.Add(new PuzzleHint(hint, Hints, PossibleColors, length));
             }
-            this.LineOrdinal = lines.Count;
-            this.Type = type;
-            this.Length = length;
+            LineOrdinal = lines.Count;
+            Type = type;
+            Length = length;
         }
         public IList<PuzzleHint> Hints { private set; get; }
         public IList<PuzzleCell> Cells { set; get; }

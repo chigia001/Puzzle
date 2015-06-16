@@ -1,45 +1,37 @@
-﻿using Pic_a_Pix.Model;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Text;
-using NPOI.HSSF.Record;
+using Pic_a_Pix.Model;
 
 namespace Pic_a_Pix.Bussiness
 {
-    public class PicAPixSolver:ISolver
+    public class PicAPixSolver : ISolver
     {
         public void Solve(Puzzle puzzle)
         {
-            for (int i = 0; i <= 10; i++)
+            foreach (var line in puzzle.Rows)
             {
+                SolveMethod1(line);
+            }
+            foreach (var line in puzzle.Columns)
+            {
+                SolveMethod1(line);
+            }
 
-                foreach (var line in puzzle.Rows)
-                {
-                    SolveMethod1(line);
-                }
-                foreach (var line in puzzle.Columns)
-                {
-                    SolveMethod1(line);
-                }
-
-                foreach (var line in puzzle.Rows)
-                {
-                    SolveMethod2(line);
-                }
-                foreach (var line in puzzle.Columns)
-                {
-                    SolveMethod2(line);
-                }
-                foreach (var line in puzzle.Rows)
-                {
-                    SolveMethod3(line);
-                }
-                foreach (var line in puzzle.Columns)
-                {
-                    SolveMethod3(line);
-                } 
+            foreach (var line in puzzle.Rows)
+            {
+                SolveMethod2(line);
+            }
+            foreach (var line in puzzle.Columns)
+            {
+                SolveMethod2(line);
+            }
+            foreach (var line in puzzle.Rows)
+            {
+                SolveMethod3(line);
+            }
+            foreach (var line in puzzle.Columns)
+            {
+                SolveMethod3(line);
             }
         }
 
@@ -115,7 +107,7 @@ namespace Pic_a_Pix.Bussiness
             {
                 if (backward.TryGetValue(hint, out start) && forward.TryGetValue(hint, out end) && start <= end)
                 {
-                    MarkZone(start,end,line,hint);
+                    MarkZone(start, end, line, hint);
                 }
             }
         }
@@ -128,12 +120,12 @@ namespace Pic_a_Pix.Bussiness
                 return;
             var i = firstHint.StartIndex;
             bool IsCompleted = false;
-            while ( i <= firstHint.EndIndex-firstHint.HintLength+1 && !IsCompleted)
+            while (i <= firstHint.EndIndex - firstHint.HintLength + 1 && !IsCompleted)
             {
                 var cellI = line.Cells[i];
                 if (cellI.PossibleColor.Contains(firstHint.HintColor))
                 {
-                    var j = i ;
+                    var j = i;
                     while (j < i + firstHint.HintLength && !IsCompleted)
                     {
                         var cellJ = line.Cells[j];
@@ -143,7 +135,7 @@ namespace Pic_a_Pix.Bussiness
                             {
                                 line.Cells[t].PossibleColor.Remove(firstHint.HintColor);
                             }
-                            i = j+1;
+                            i = j + 1;
                             firstHint.StartIndex = i;
                             break;
                         }
@@ -155,9 +147,9 @@ namespace Pic_a_Pix.Bussiness
                         {
                             var k = j;
                             var l = k;
-                            while (l+1 < j + firstHint.HintLength && l+1 <= firstHint.EndIndex)
+                            while (l + 1 < j + firstHint.HintLength && l + 1 <= firstHint.EndIndex)
                             {
-                                var nextCellL = line.Cells[l+1];
+                                var nextCellL = line.Cells[l + 1];
                                 if (!nextCellL.PossibleColor.Contains(firstHint.HintColor))
                                 {
                                     break;
@@ -251,7 +243,7 @@ namespace Pic_a_Pix.Bussiness
             }
         }
 
-        private void MarkZone(int start, int end,Line line, PuzzleHint hint)
+        private void MarkZone(int start, int end, Line line, PuzzleHint hint)
         {
             for (int i = start; i <= end; i++)
             {

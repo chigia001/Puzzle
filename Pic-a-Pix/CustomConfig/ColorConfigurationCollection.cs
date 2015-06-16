@@ -1,17 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
+﻿using System.Configuration;
 
 namespace Pic_a_Pix.CustomConfig
 {
     class ColorConfigurationCollection : ConfigurationElementCollection
     {
-        public ColorConfigurationCollection()
-        {
-        }
-
         public void Add(ColorConfigurationElement customElement)
         {
             BaseAdd(customElement);
