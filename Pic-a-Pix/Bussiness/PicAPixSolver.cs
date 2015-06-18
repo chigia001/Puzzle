@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Pic_a_Pix.Model;
 
@@ -6,32 +8,46 @@ namespace Pic_a_Pix.Bussiness
 {
     public class PicAPixSolver : ISolver
     {
-        public void Solve(Puzzle puzzle)
+        public void Solve(Puzzle puzzle,int i)
         {
-            foreach (var line in puzzle.Rows)
+            switch (i%6)
             {
-                SolveMethod1(line);
-            }
-            foreach (var line in puzzle.Columns)
-            {
-                SolveMethod1(line);
-            }
-
-            foreach (var line in puzzle.Rows)
-            {
-                SolveMethod2(line);
-            }
-            foreach (var line in puzzle.Columns)
-            {
-                SolveMethod2(line);
-            }
-            foreach (var line in puzzle.Rows)
-            {
-                SolveMethod3(line);
-            }
-            foreach (var line in puzzle.Columns)
-            {
-                SolveMethod3(line);
+                case 0:
+                    foreach (var line in puzzle.Rows)
+                    {
+                        SolveMethod1(line);
+                    }
+                    break;
+                case 1:
+                    foreach (var line in puzzle.Columns)
+                    {
+                        SolveMethod1(line);
+                    }
+                    break;
+                case 2:
+                    foreach (var line in puzzle.Rows)
+                    {
+                        SolveMethod2(line);
+                    }
+                    break;
+                case 3:
+                    foreach (var line in puzzle.Columns)
+                    {
+                        SolveMethod2(line);
+                    }
+                    break;
+                case 4:
+                    foreach (var line in puzzle.Rows)
+                    {
+                        SolveMethod3(line);
+                    }
+                    break;
+                case 5:
+                    foreach (var line in puzzle.Columns)
+                    {
+                        SolveMethod3(line);
+                    }
+                    break;
             }
         }
 
@@ -52,6 +68,19 @@ namespace Pic_a_Pix.Bussiness
             var end = 0;
             for (int i = 0; i < line.Cells.Count; i++)
             {
+                if (currentHint.IsCompleted)
+                {
+                    blockWidth = 0;
+                    i = currentHint.EndIndex + 1;
+                    hintIndex++;
+                    previousHint = currentHint;
+                    if (hintIndex < line.Hints.Count)
+                        currentHint = line.Hints[hintIndex];
+                    else break;
+                    if (previousHint.HintColor == currentHint.HintColor)
+                        i++;
+                    
+                }
                 if (blockWidth == 0)
                     start = i;
                 var cell = line.Cells[i];
@@ -80,6 +109,20 @@ namespace Pic_a_Pix.Bussiness
             previousHint = null;
             for (int j = line.Cells.Count - 1; j >= 0; j--)
             {
+                if (currentHint.IsCompleted)
+                {
+                    j = currentHint.StartIndex - 1;
+                    blockWidth = 0;
+                    hintIndex--;
+
+                    previousHint = currentHint;
+                    if (hintIndex >= 0)
+                        currentHint = line.Hints[hintIndex];
+                    else break;
+                    if (previousHint.HintColor == currentHint.HintColor)
+                        j--;
+
+                }
                 if (blockWidth == 0)
                     end = j;
                 var cell = line.Cells[j];
@@ -120,23 +163,41 @@ namespace Pic_a_Pix.Bussiness
                 return;
             var i = firstHint.StartIndex;
             bool IsCompleted = false;
+
+            for (int o = 0; o < firstHint.StartIndex; o++)
+            {
+                if (line.Cells[o].PossibleColor.Count > 1)
+                {
+                    line.Cells[o].PossibleColor.Clear();
+                    line.Cells[o].PossibleColor.Add(ColorDictionary.current.Blank);
+                }
+            }
             while (i <= firstHint.EndIndex - firstHint.HintLength + 1 && !IsCompleted)
             {
                 var cellI = line.Cells[i];
                 if (cellI.PossibleColor.Contains(firstHint.HintColor))
                 {
                     var j = i;
-                    while (j < i + firstHint.HintLength && !IsCompleted)
+                    while (j < i + firstHint.HintLength+1 && !IsCompleted)
                     {
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(firstHint.HintColor))
                         {
-                            for (var t = i; t < j; t++)
+                            if (j == i + firstHint.HintLength && cellJ.PossibleColor.Count==1)
                             {
-                                line.Cells[t].PossibleColor.Remove(firstHint.HintColor);
+
+                                MarkZone(i, j-1, line, firstHint);
+                                IsCompleted = true;
                             }
-                            i = j + 1;
-                            firstHint.StartIndex = i;
+                            else
+                            {
+                                for (var t = i; t < j; t++)
+                                {
+                                    line.Cells[t].PossibleColor.Remove(firstHint.HintColor);
+                                }
+                                i = j + 1;
+                                firstHint.StartIndex = i;
+                            }
                             break;
                         }
                         if (line.Cells[j].PossibleColor.Count != 1)
@@ -167,7 +228,7 @@ namespace Pic_a_Pix.Bussiness
 
                         }
                     }
-                    if (j >= i + firstHint.HintLength) break;
+                    if (j >= i + firstHint.HintLength + 1) break;
                 }
                 else i++;
             }
@@ -176,6 +237,15 @@ namespace Pic_a_Pix.Bussiness
             var lastHint = line.Hints.LastOrDefault(x => !x.IsCompleted);
             if (lastHint == null)
                 return;
+
+            for (int o = line.Cells.Count-1; o > lastHint.EndIndex; o--)
+            {
+                if (line.Cells[o].PossibleColor.Count > 1)
+                {
+                    line.Cells[o].PossibleColor.Clear();
+                    line.Cells[o].PossibleColor.Add(ColorDictionary.current.Blank);
+                }
+            }
             i = lastHint.EndIndex;
             while (i >= lastHint.StartIndex + lastHint.HintLength - 1 && !IsCompleted)
             {
@@ -183,17 +253,26 @@ namespace Pic_a_Pix.Bussiness
                 if (cellI.PossibleColor.Contains(lastHint.HintColor))
                 {
                     var j = i;
-                    while (j > i - lastHint.HintLength && !IsCompleted)
+                    while (j > i - lastHint.HintLength -1 && !IsCompleted)
                     {
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(lastHint.HintColor))
                         {
-                            for (var t = i; t > j; t--)
+                            if (j == i - lastHint.HintLength && cellJ.PossibleColor.Count == 1)
                             {
-                                line.Cells[t].PossibleColor.Remove(lastHint.HintColor);
+
+                                MarkZone(i, j - 1, line, firstHint);
+                                IsCompleted = true;
                             }
-                            i = j - 1;
-                            lastHint.EndIndex = i;
+                            else
+                            {
+                                for (var t = i; t > j; t--)
+                                {
+                                    line.Cells[t].PossibleColor.Remove(lastHint.HintColor);
+                                }
+                                i = j - 1;
+                                lastHint.EndIndex = i;
+                            }
                             break;
                         }
                         if (line.Cells[j].PossibleColor.Count != 1)
@@ -224,7 +303,7 @@ namespace Pic_a_Pix.Bussiness
 
                         }
                     }
-                    if (j <= i - lastHint.HintLength) break;
+                    if (j <= i - lastHint.HintLength-1) break;
                 }
                 else i--;
             }
@@ -247,9 +326,16 @@ namespace Pic_a_Pix.Bussiness
         {
             for (int i = start; i <= end; i++)
             {
-                line.Cells[i].PossibleColor.Clear();
-                line.Cells[i].PossibleColor.Add(hint.HintColor);
-                hint.CellBelongToHint.Add(line.Cells[i]);
+                if (line.Cells[i].PossibleColor.Contains(hint.HintColor))
+                {
+                    line.Cells[i].PossibleColor.Clear();
+                    line.Cells[i].PossibleColor.Add(hint.HintColor);
+                    hint.CellBelongToHint.Add(line.Cells[i]);
+                }
+                else
+                {
+                    throw  new Exception("invalid set color");
+                }
             }
             if (end - start + 1 == hint.HintLength)
             {
@@ -258,6 +344,8 @@ namespace Pic_a_Pix.Bussiness
                     line.Cells[start - 1].PossibleColor.Remove(hint.HintColor);
                 if (end + 1 < line.Length)
                     line.Cells[end + 1].PossibleColor.Remove(hint.HintColor);
+                hint.StartIndex = start;
+                hint.EndIndex = end;
             }
         }
     }

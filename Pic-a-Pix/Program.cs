@@ -17,9 +17,9 @@ namespace Pic_a_Pix
                 var puzzle = new Puzzle(commandLineInput.HintFile);
                 var solver = new PicAPixSolver();
                 var excelObject = new ExcelObject(puzzle);
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < commandLineInput.Loop; i++)
                 {
-                    solver.Solve(puzzle);
+                    solver.Solve(puzzle,i);
                     excelObject.AddSheet(i);
                 }
                 excelObject.WriteToExcelFile(commandLineInput.OutputFile);
@@ -32,6 +32,11 @@ namespace Pic_a_Pix
             public string OutputFile { get; set; }
             [Option('h', null, Required = true, HelpText = "Hint file to Read.")]
             public string HintFile { get; set; }
+
+            [Option('l', null, Required = true, HelpText = "Hint file to Read.")]
+            public int Loop { get; set; }
+
+
             [HelpOption]
             public string GetUsage()
             {

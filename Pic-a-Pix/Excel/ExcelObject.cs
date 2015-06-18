@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
 using Pic_a_Pix.Model;
@@ -44,6 +45,10 @@ namespace Pic_a_Pix.Excel
                     {
                         var color = puzzleRow.Cells[columnIndex].PossibleColor[0];
                         cell.CellStyle = StyleDictionary[color];
+                    }
+                    else
+                    {
+                        cell.SetCellValue(string.Join(",",puzzleRow.Cells[columnIndex].PossibleColor.Select(x => x.ColorName).ToArray()));
                     }
                 }
             }
