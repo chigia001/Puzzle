@@ -167,10 +167,7 @@ namespace Pic_a_Pix.Bussiness
             for (int o = 0; o < firstHint.StartIndex; o++)
             {
                 if (line.Cells[o].PossibleColor.Count > 1)
-                {
-                    line.Cells[o].PossibleColor.Clear();
-                    line.Cells[o].PossibleColor.Add(ColorDictionary.current.Blank);
-                }
+                    Clear(line.Cells[o]);
             }
             while (i <= firstHint.EndIndex - firstHint.HintLength + 1 && !IsCompleted)
             {
@@ -183,13 +180,14 @@ namespace Pic_a_Pix.Bussiness
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(firstHint.HintColor))
                         {
-                            if (j == i + firstHint.HintLength && cellJ.PossibleColor.Count==1)
+                            if (j == i + firstHint.HintLength )
                             {
 
-                                MarkZone(i, j-1, line, firstHint);
                                 IsCompleted = true;
+                                if (cellJ.PossibleColor.Count == 1 && !cellJ.PossibleColor.Contains(ColorDictionary.current.Blank))
+                                    MarkZone(i, j-1, line, firstHint);
                             }
-                            else
+                            else 
                             {
                                 for (var t = i; t < j; t++)
                                 {
@@ -242,8 +240,8 @@ namespace Pic_a_Pix.Bussiness
             {
                 if (line.Cells[o].PossibleColor.Count > 1)
                 {
-                    line.Cells[o].PossibleColor.Clear();
-                    line.Cells[o].PossibleColor.Add(ColorDictionary.current.Blank);
+                    if(line.Cells[o].PossibleColor.Count>1)
+                    Clear(line.Cells[o]);
                 }
             }
             i = lastHint.EndIndex;
@@ -258,11 +256,12 @@ namespace Pic_a_Pix.Bussiness
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(lastHint.HintColor))
                         {
-                            if (j == i - lastHint.HintLength && cellJ.PossibleColor.Count == 1)
+                            if (j == i - lastHint.HintLength )
                             {
 
-                                MarkZone(i, j - 1, line, firstHint);
                                 IsCompleted = true;
+                                if (cellJ.PossibleColor.Count == 1 && !cellJ.PossibleColor.Contains(ColorDictionary.current.Blank))
+                                    MarkZone(i, j - 1, line, firstHint);
                             }
                             else
                             {
@@ -316,8 +315,7 @@ namespace Pic_a_Pix.Bussiness
                 foreach (var cell in
                 line.Cells.Where(x => x.PossibleColor.Count > 1))
                 {
-                    cell.PossibleColor.Clear();
-                    cell.PossibleColor.Add(ColorDictionary.current.Blank);
+                    Clear(cell);
                 }
             }
         }
@@ -347,6 +345,17 @@ namespace Pic_a_Pix.Bussiness
                 hint.StartIndex = start;
                 hint.EndIndex = end;
             }
+        }
+
+        private void Clear(PuzzleCell cell)
+        {
+            //if (cell.PossibleColor.Contains(ColorDictionary.current.Blank))
+            {
+                cell.PossibleColor.Clear();
+                cell.PossibleColor.Add(ColorDictionary.current.Blank);
+            }
+            //else 
+               // throw new Exception("Unvalid step");
         }
     }
 }
