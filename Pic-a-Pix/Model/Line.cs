@@ -11,10 +11,11 @@ namespace Pic_a_Pix.Model
 
             Cells = new List<PuzzleCell>();
             Hints = new List<PuzzleHint>();
-
+            this.PossibleColors = new List<Color>();
+            this.PossibleColors.Add(ColorDictionary.current.Blank);
             foreach(var hint in hints)
             {
-                Hints.Add(new PuzzleHint(hint, Hints, PossibleColors, length));
+                Hints.Add(new PuzzleHint(hint, Hints, PossibleColors,this.PossibleColors, length));
             }
             LineOrdinal = lines.Count;
             Type = type;
@@ -25,6 +26,7 @@ namespace Pic_a_Pix.Model
         public int Length { get; set; }
         public LineType Type { get; set; }
         public int LineOrdinal { get; set; }
+        public IList<Color> PossibleColors { get; set; }
 
         public IEnumerable<PuzzleHint> ForwardPuzzleHints()
         {

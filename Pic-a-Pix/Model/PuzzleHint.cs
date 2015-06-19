@@ -8,7 +8,7 @@ namespace Pic_a_Pix.Model
     public class PuzzleHint
     {
 
-        public PuzzleHint(string hint, IList<PuzzleHint> Hints, IList<Color> PossibleColors, int endIndex)
+        public PuzzleHint(string hint, IList<PuzzleHint> Hints, IList<Color> PossibleColors, IList<Color> LinePossibleColors, int endIndex)
         {
             // TODO: Complete member initialization
             var pattern = @"^(\d+)(\w)?$";
@@ -25,6 +25,9 @@ namespace Pic_a_Pix.Model
 
                 if (!PossibleColors.Contains(HintColor))
                     PossibleColors.Add(HintColor);
+
+                if (!LinePossibleColors.Contains(HintColor))
+                    LinePossibleColors.Add(HintColor);
 
                 HintOrdinal = Hints.Count();
                 CellBelongToHint = new List<PuzzleCell>();

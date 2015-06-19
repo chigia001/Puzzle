@@ -57,7 +57,7 @@ namespace Pic_a_Pix.Model
                 for (int columnIndex = 0; columnIndex < ColumnSize; columnIndex++)
                 {
                     var column = Columns[columnIndex];
-                    var cell = new PuzzleCell(rowIndex, columnIndex, PossibleColor, row, column);
+                    var cell = new PuzzleCell(rowIndex, columnIndex, row, column);
                     row.Cells.Add(cell);
                     column.Cells.Add(cell);
                 }

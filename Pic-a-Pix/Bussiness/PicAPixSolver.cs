@@ -175,7 +175,7 @@ namespace Pic_a_Pix.Bussiness
                 if (cellI.PossibleColor.Contains(firstHint.HintColor))
                 {
                     var j = i;
-                    while (j < i + firstHint.HintLength+1 && !IsCompleted)
+                    while (j < i + firstHint.HintLength+1 && !IsCompleted && j <= firstHint.EndIndex)
                     {
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(firstHint.HintColor))
@@ -226,7 +226,7 @@ namespace Pic_a_Pix.Bussiness
 
                         }
                     }
-                    if (j >= i + firstHint.HintLength + 1) break;
+                    if (j >= i + firstHint.HintLength + 1 || j > firstHint.EndIndex) break;
                 }
                 else i++;
             }
@@ -251,7 +251,7 @@ namespace Pic_a_Pix.Bussiness
                 if (cellI.PossibleColor.Contains(lastHint.HintColor))
                 {
                     var j = i;
-                    while (j > i - lastHint.HintLength -1 && !IsCompleted)
+                    while (j > i - lastHint.HintLength -1 && !IsCompleted && j>= firstHint.StartIndex)
                     {
                         var cellJ = line.Cells[j];
                         if (!cellJ.PossibleColor.Contains(lastHint.HintColor))
@@ -302,7 +302,7 @@ namespace Pic_a_Pix.Bussiness
 
                         }
                     }
-                    if (j <= i - lastHint.HintLength-1) break;
+                    if (j <= i - lastHint.HintLength - 1 || j < firstHint.StartIndex) break;
                 }
                 else i--;
             }
